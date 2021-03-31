@@ -4126,6 +4126,50 @@
 #ifndef PWM0_ENABLED
 #define PWM0_ENABLED 1
 #endif
+
+#ifndef FDS_ENABLED
+#define FDS_ENABLED 1
+#endif
+
+#ifndef FDS_VIRTUAL_PAGES
+#define FDS_VIRTUAL_PAGES 3
+#endif
+
+#ifndef FDS_VIRTUAL_PAGE_SIZE
+#define FDS_VIRTUAL_PAGE_SIZE 1024
+#endif
+
+#ifndef FDS_VIRTUAL_PAGES_RESERVED
+#define FDS_VIRTUAL_PAGES_RESERVED 0
+#endif
+
+#ifndef FDS_BACKEND
+#define FDS_BACKEND 1
+#endif
+
+#ifndef FDS_OP_QUEUE_SIZE
+#define FDS_OP_QUEUE_SIZE 4
+#endif
+
+#ifndef FDS_CRC_CHECK_ON_READ
+#define FDS_CRC_CHECK_ON_READ 0
+#endif
+
+#ifndef FDS_CRC_CHECK_ON_WRITE
+#define FDS_CRC_CHECK_ON_WRITE 0
+#endif
+
+#ifndef FDS_MAX_USERS
+#define FDS_MAX_USERS 4
+#endif
+
+#ifndef NRF_FSTORAGE_ENABLED
+#define NRF_FSTORAGE_ENABLED 1
+#endif
+
+#ifndef NRF_FSTORAGE_PARAM_CHECK_DISABLED
+#define NRF_FSTORAGE_PARAM_CHECK_DISABLED 0
+#endif
 // </h> 
 //==========================================================
 

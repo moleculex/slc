@@ -9,6 +9,8 @@
 #include "task.h"
 #include "photo.h"
 #include "pwm.h"
+#include "dali.h"
+#include "fds.h"
 
 
 #define TWI_INSTANCE_ID     0
@@ -98,13 +100,18 @@ static void read_sensor_data()
     m_xfer_done = false;
 
     /* Read 1 byte from the specified address - skip 3 bits dedicated for fractional part of temperature. */
-    ret_code_t err_code = nrf_drv_twi_rx(&m_twi, 0x42, &m_sample, 128);
+    ret_code_t err_code = nrf_drv_twi_rx(&m_twi, 0x42, &_sys.buf, 128);
     //ret_code_t err_code = nrf_drv_twi_rx(&m_twi, 0x1f, &m_sample, 10);
     APP_ERROR_CHECK(err_code);
 }
 
+
 void buzzer_task(void)
 {
+  char *n;
+  char latitude[12];
+  char longitude[13];
+  
   nrf_gpio_cfg_output(BUZZER);
   nrf_gpio_cfg_output(GPS_RESET);
 
@@ -122,8 +129,49 @@ void buzzer_task(void)
     nrf_gpio_pin_write(BUZZER, 0);
     vTaskDelay(1000);
     read_sensor_data();
+
+    if(_sys.buf[0] != 0xff && _sys.buf[0] != '\0' )
+    {
+      n = strstr((char *)_sys.buf, "$GNRMC,");//$GNGLL,2936.15343,S,03020.38750,E  $GNRMC,152138.00,A,2936.14719,S,03020.38501,E,0.376,,011219,,,A*7D
+
+      if(n && (n[17] == 'A') && _sys.fix == 0x00)
+      {
+	vTaskDelay(200);
+
+	memcpy(latitude, &n[19], 12);
+	memcpy(longitude, &n[32], 13);
+
+	memcpy(&_sys.longitude[0], &longitude[0], 5);
+	memcpy(&_sys.longitude[5], &longitude[6], 5);
+	if(longitude[12] == 'E')
+          _sys.longitude[10] = '1';
+	if(longitude[12] == 'W')
+          _sys.longitude[10] = '0';
+
+	memcpy(&_sys.latitude[0], &latitude[0], 4);
+	memcpy(&_sys.latitude[4], &latitude[5], 5);
+	if(latitude[11] == 'S')
+          _sys.latitude[9] = '0';
+	if(latitude[11] == 'N')
+          _sys.latitude[9] = '1';
+
+	_sys.fix = 0x01;
+
+	nrf_gpio_pin_write(BUZZER, 1);
+	vTaskDelay(200);
+	nrf_gpio_pin_write(BUZZER, 0);
+	vTaskDelay(200);
+	nrf_gpio_pin_write(BUZZER, 1);
+	vTaskDelay(200);
+	nrf_gpio_pin_write(BUZZER, 0);			
+      }	
+    }
   }
 }
+
+#define BROADCAST_C 0b11111110
+#define ON_C 0b00000101
+#define OFF_C 0b00000000
 
 void led_task(void)
 {
@@ -139,6 +187,8 @@ void led_task(void)
   nrf_gpio_pin_write(LED_POWER, 0);
   nrf_gpio_pin_write(LED_NETWORK, 0);
 
+  dali_init();
+  dali_tx(BROADCAST_C, OFF_C);
 
   for(;;)
   {
@@ -147,12 +197,14 @@ void led_task(void)
     nrf_gpio_pin_write(LED_BLUE, 0);
     nrf_gpio_pin_write(LED_POWER, 0);
     nrf_gpio_pin_write(LED_NETWORK, 0);
+    dali_tx(BROADCAST_C, ON_C);
     vTaskDelay(1000);
     nrf_gpio_pin_write(LED_RED, 1);
     nrf_gpio_pin_write(LED_GREEN, 1);
     nrf_gpio_pin_write(LED_BLUE, 1);
     nrf_gpio_pin_write(LED_POWER, 1);
     nrf_gpio_pin_write(LED_NETWORK, 1);
+    dali_tx(BROADCAST_C, OFF_C);
     vTaskDelay(1000);
   }
 }
@@ -163,9 +215,45 @@ TaskHandle_t  photo_task_handle;
 TaskHandle_t  pwm_task_handle;
 TaskHandle_t  led_task_handle;
 
+typedef struct
+{
+    uint32_t boot_count;
+    char     device_name[16];
+    bool     config1_on;
+    bool     config2_on;
+} configuration_t;
+
+static configuration_t m_dummy_cfg =
+{
+    .config1_on  = false,
+    .config2_on  = true,
+    .boot_count  = 0x0,
+    .device_name = "dummy",
+};
+
+static fds_record_t const m_dummy_record =
+{
+    .file_id           = 0x8010,
+    .key               = 0x7010,
+    .data.p_data       = &m_dummy_cfg,
+    /* The length of a record is always expressed in 4-byte units (words). */
+    .data.length_words = (sizeof(m_dummy_cfg) + 3) / sizeof(uint32_t),
+};
+
 int main(void)
 {
     ret_code_t err_code;
+
+    fds_record_desc_t desc = {0};
+    fds_flash_record_t config = {0};
+
+    fds_init();
+
+    fds_record_write(&desc, &m_dummy_record);
+
+    fds_record_open(&desc, &config);
+    memcpy(&m_dummy_cfg, config.p_data, sizeof(configuration_t));
+    fds_record_close(&desc);
 
     //bsp_board_init(BSP_INIT_LEDS); 
 
@@ -208,7 +296,7 @@ int main(void)
 
     xTaskCreate(buzzer_task, "buzzer_task", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &buzzer_task_handle);
     xTaskCreate(photo_task, "photo_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &photo_task_handle);
-    xTaskCreate(rn2483_task, "rn2483_task", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &rn2483_task_handle);
+    //xTaskCreate(rn2483_task, "rn2483_task", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &rn2483_task_handle);
     xTaskCreate(pwm_task, "pwm_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &pwm_task_handle);
     xTaskCreate(led_task, "led_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &led_task_handle);
     vTaskStartScheduler();

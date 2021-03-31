@@ -147,8 +147,33 @@ SECTIONS
 
   . = ASSERT(__nrf_sections_start__ == __nrf_sections_end__ || (__nrf_sections_end__ - __FLASH_segment_start__) <= __FLASH_segment_size__ , "error: .nrf_sections is too large to fit in FLASH memory segment");
 
-  __log_dynamic_data_load_start__ = ALIGN(__nrf_sections_end__ , 4);
-  .log_dynamic_data ALIGN(__nrf_sections_run_end__ , 4) : AT(ALIGN(__nrf_sections_end__ , 4))
+  __fs_data_load_start__ = ALIGN(__nrf_sections_end__ , 4);
+  .fs_data ALIGN(__nrf_sections_run_end__ , 4) : AT(ALIGN(__nrf_sections_end__ , 4))
+  {
+    __fs_data_start__ = .;
+    KEEP(*(.fs_data*))
+  }
+  __fs_data_end__ = __fs_data_start__ + SIZEOF(.fs_data);
+  __fs_data_size__ = SIZEOF(.fs_data);
+  __fs_data_load_end__ = __fs_data_load_start__ + SIZEOF(.fs_data);
+
+  . = ASSERT(__fs_data_load_start__ == __fs_data_load_end__ || (__fs_data_load_end__ - __FLASH_segment_start__) <=  __FLASH_segment_size__ , "error: .fs_data is too large to fit in FLASH memory segment");
+
+  .fs_data_run ALIGN(__nrf_sections_run_end__ , 4) (NOLOAD) :
+  {
+    __fs_data_run_start__ = .;
+    __start_fs_data =   __fs_data_run_start__;
+    . = MAX(__fs_data_run_start__ + SIZEOF(.fs_data), .);
+  }
+  __fs_data_run_end__ = __fs_data_run_start__ + SIZEOF(.fs_data_run);
+  __fs_data_run_size__ = SIZEOF(.fs_data_run);
+  __stop_fs_data =   __fs_data_run_end__;
+  __fs_data_run_load_end__ = __fs_data_run_end__;
+
+  . = ASSERT(__fs_data_run_start__ == __fs_data_run_end__ || (__fs_data_run_end__ - __RAM1_segment_start__) <= __RAM1_segment_size__ , "error: .fs_data_run is too large to fit in RAM1 memory segment");
+
+  __log_dynamic_data_load_start__ = ALIGN(__fs_data_load_start__ + SIZEOF(.fs_data) , 4);
+  .log_dynamic_data ALIGN(__fs_data_run_end__ , 4) : AT(ALIGN(__fs_data_load_start__ + SIZEOF(.fs_data) , 4))
   {
     __log_dynamic_data_start__ = .;
     KEEP(*(SORT(.log_dynamic_data*)))
@@ -159,7 +184,7 @@ SECTIONS
 
   . = ASSERT(__log_dynamic_data_load_start__ == __log_dynamic_data_load_end__ || (__log_dynamic_data_load_end__ - __FLASH_segment_start__) <=  __FLASH_segment_size__ , "error: .log_dynamic_data is too large to fit in FLASH memory segment");
 
-  .log_dynamic_data_run ALIGN(__nrf_sections_run_end__ , 4) (NOLOAD) :
+  .log_dynamic_data_run ALIGN(__fs_data_run_end__ , 4) (NOLOAD) :
   {
     __log_dynamic_data_run_start__ = .;
     __start_log_dynamic_data =   __log_dynamic_data_run_start__;
