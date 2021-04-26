@@ -40,7 +40,7 @@ char strTimeslot[5];
 char txBuf[21];
 int f;
 
-void uart_error_handle(app_uart_evt_t * p_event)
+void rn2483_uart_error_handle(app_uart_evt_t * p_event)
 {
     if (p_event->evt_type == APP_UART_COMMUNICATION_ERROR)
     {
@@ -59,6 +59,13 @@ void rn2483_init(void)
   memset(_rn2483.rxBuffer, '\0', sizeof _rn2483.rxBuffer);
   _rn2483.rxBuffer_ptr = &_rn2483.rxBuffer[0];
 
+  nrf_gpio_cfg(RN2483_RESET,
+               NRF_GPIO_PIN_DIR_OUTPUT,
+               NRF_GPIO_PIN_INPUT_DISCONNECT,
+               NRF_GPIO_PIN_NOPULL,
+               NRF_GPIO_PIN_S0D1,
+               NRF_GPIO_PIN_NOSENSE);
+
   const app_uart_comm_params_t comm_params =
   {
       RX_PIN_NUMBER,
@@ -73,7 +80,7 @@ void rn2483_init(void)
   APP_UART_FIFO_INIT(&comm_params,
                      256,
                      256,
-                     uart_error_handle,
+                     rn2483_uart_error_handle,
                      APP_IRQ_PRIORITY_LOWEST,
                      err_code);
 

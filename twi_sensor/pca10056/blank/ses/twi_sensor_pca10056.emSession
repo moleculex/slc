@@ -2,6 +2,7 @@
 <session>
  <Bookmarks/>
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <BreakpointListItem trigger="" line="8" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="protocol.h" useHWbreakpoint="false"/>
   <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
@@ -24,6 +25,7 @@
   <ProjectSessionItem path="twi_sensor_pca10056"/>
   <ProjectSessionItem path="twi_sensor_pca10056;twi_sensor_pca10056"/>
   <ProjectSessionItem path="twi_sensor_pca10056;twi_sensor_pca10056;Application"/>
+  <ProjectSessionItem path="twi_sensor_pca10056;twi_sensor_pca10056;nRF_Libraries"/>
  </Project>
  <Register1>
   <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="twi_sensor_pca10056" decimalNodes="" octalNodes="" unsignedNodes=""/>
@@ -45,10 +47,10 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" update="Never">
-   <Watchpoint expression="m_buffer_pool" name="m_buffer_pool" radix="-1" linenumber="105" filename="../../../main.c"/>
-   <Watchpoint expression="_rn2483" name="_rn2483" radix="-1" linenumber="255" filename="rn2483.c"/>
-   <Watchpoint expression="_sys" name="_sys" radix="-1" linenumber="135" filename="../../../main.c"/>
-   <Watchpoint expression="n" name="n" radix="16" linenumber="137" filename="../../../main.c"/>
+   <Watchpoint expression="m_buffer_pool" name="m_buffer_pool" radix="-1" linenumber="107" filename="../../../main.c"/>
+   <Watchpoint expression="_rn2483" name="_rn2483" radix="-1" linenumber="262" filename="rn2483.c"/>
+   <Watchpoint expression="_sys" name="_sys" radix="-1" linenumber="137" filename="../../../main.c"/>
+   <Watchpoint expression="n" name="n" radix="16" linenumber="139" filename="../../../main.c"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -61,22 +63,18 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="234" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="213" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="72" y="297" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="282" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="142" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_twi.h" selected="0" top="132" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="66" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/boards.h" selected="0" top="39" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="rn2483.c" selected="0" top="66" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="133" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="photo.c" selected="0" top="155" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="15" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="pwm.c" selected="0" top="50" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="133" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/pwm.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/hal/nrf_pwm.h" selected="0" top="112" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="49" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/boards.h" selected="0" top="39" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="dali.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="dali.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="59" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10056.h" selected="0" top="27" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="28" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="rn2483.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="27" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="protocol.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="156" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/fds/fds.h" selected="0" top="138" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="52" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/fds/fds.c" selected="0" top="43" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="4133" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="1" top="4121" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="106" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/fds/fds_internal_defs.h" selected="0" top="75" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="20" y="49" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10056.h" selected="0" top="27" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="rn2483.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="5" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="protocol.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="3" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="sara.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="45" y="63" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="rn2483.c" selected="0" top="50" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="30" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="sara.c" selected="0" top="82" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="106" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/sara.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/hal/nrf_uart.h" selected="0" top="82" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="twi_sensor_pca10056" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/home/peter/nRF5_SDK_17.0.2_d674dde/components/libraries/fstorage" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="twi_sensor_pca10056" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/home/peter/nRF5_SDK_17.0.2_d674dde/modules/nrfx/hal" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

@@ -5,12 +5,14 @@
 #include "nrf_drv_twi.h"
 #include "nrf_delay.h"
 #include "rn2483.h"
+#include "sara.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "photo.h"
 #include "pwm.h"
 #include "dali.h"
 #include "fds.h"
+#include "protocol.h"
 
 
 #define TWI_INSTANCE_ID     0
@@ -171,6 +173,10 @@ void buzzer_task(void)
 
 #define BROADCAST_C 0b11111110
 #define ON_C 0b00000101
+#define _25 64
+#define _50 127
+#define _75 192
+#define _100 254
 #define OFF_C 0b00000000
 
 void led_task(void)
@@ -188,24 +194,32 @@ void led_task(void)
   nrf_gpio_pin_write(LED_NETWORK, 0);
 
   dali_init();
-  dali_tx(BROADCAST_C, OFF_C);
 
   for(;;)
   {
+    dali_tx(BROADCAST_C, _100);
+    vTaskDelay(2000);
     nrf_gpio_pin_write(LED_RED, 0);
     nrf_gpio_pin_write(LED_GREEN, 0);
     nrf_gpio_pin_write(LED_BLUE, 0);
     nrf_gpio_pin_write(LED_POWER, 0);
     nrf_gpio_pin_write(LED_NETWORK, 0);
-    dali_tx(BROADCAST_C, ON_C);
-    vTaskDelay(1000);
-    nrf_gpio_pin_write(LED_RED, 1);
+    dali_tx(BROADCAST_C, _75);
+    vTaskDelay(2000);
+    dali_tx(BROADCAST_C, _50);
+    vTaskDelay(2000);
+    dali_tx(BROADCAST_C, _25);
+    vTaskDelay(2000);
+    dali_tx(BROADCAST_C, 0);
+    vTaskDelay(2000);
+    
+    /*nrf_gpio_pin_write(LED_RED, 1);
     nrf_gpio_pin_write(LED_GREEN, 1);
     nrf_gpio_pin_write(LED_BLUE, 1);
     nrf_gpio_pin_write(LED_POWER, 1);
     nrf_gpio_pin_write(LED_NETWORK, 1);
     dali_tx(BROADCAST_C, OFF_C);
-    vTaskDelay(1000);
+    vTaskDelay(1000);*/
   }
 }
 
@@ -214,6 +228,7 @@ TaskHandle_t  buzzer_task_handle;
 TaskHandle_t  photo_task_handle;
 TaskHandle_t  pwm_task_handle;
 TaskHandle_t  led_task_handle;
+TaskHandle_t  sara_task_handle;
 
 typedef struct
 {
@@ -223,21 +238,13 @@ typedef struct
     bool     config2_on;
 } configuration_t;
 
-static configuration_t m_dummy_cfg =
-{
-    .config1_on  = false,
-    .config2_on  = true,
-    .boot_count  = 0x0,
-    .device_name = "dummy",
-};
-
 static fds_record_t const m_dummy_record =
 {
     .file_id           = 0x8010,
     .key               = 0x7010,
-    .data.p_data       = &m_dummy_cfg,
+    .data.p_data       = &_flash,
     /* The length of a record is always expressed in 4-byte units (words). */
-    .data.length_words = (sizeof(m_dummy_cfg) + 3) / sizeof(uint32_t),
+    .data.length_words = (sizeof(_flash) + 3) / sizeof(uint32_t),
 };
 
 int main(void)
@@ -246,14 +253,17 @@ int main(void)
 
     fds_record_desc_t desc = {0};
     fds_flash_record_t config = {0};
+    fds_find_token_t  tok  = {0};
 
     fds_init();
 
-    fds_record_write(&desc, &m_dummy_record);
+    fds_record_find(0x8010, 0x7010, &desc, &tok);
 
     fds_record_open(&desc, &config);
-    memcpy(&m_dummy_cfg, config.p_data, sizeof(configuration_t));
+    memcpy(&_flash, config.p_data, sizeof(t_flash));
     fds_record_close(&desc);
+
+    //fds_record_write(&desc, &m_dummy_record);
 
     //bsp_board_init(BSP_INIT_LEDS); 
 
@@ -299,6 +309,7 @@ int main(void)
     //xTaskCreate(rn2483_task, "rn2483_task", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &rn2483_task_handle);
     xTaskCreate(pwm_task, "pwm_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &pwm_task_handle);
     xTaskCreate(led_task, "led_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &led_task_handle);
+    //xTaskCreate(sara_task, "sara_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &sara_task_handle);
     vTaskStartScheduler();
 
     while (true)

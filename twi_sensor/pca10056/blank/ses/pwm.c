@@ -11,8 +11,7 @@
 
 static nrf_drv_pwm_t m_pwm0 = NRF_DRV_PWM_INSTANCE(0);
 
-static uint16_t const              m_demo1_top  = 10000;
-static uint16_t const              m_demo1_step = 200;
+static uint16_t const              m_demo1_top  = 100;
 static uint8_t                     m_demo1_phase;
 static nrf_pwm_values_individual_t m_demo1_seq_values;
 static nrf_pwm_sequence_t const    m_demo1_seq =
@@ -50,9 +49,14 @@ void pwm_init(void)
     };
     APP_ERROR_CHECK(nrf_drv_pwm_init(&m_pwm0, &config0, demo1_handler));
 
-    m_demo1_seq_values.channel_0 = 10000;
+    m_demo1_seq_values.channel_0 = 0;
 
     (void)nrf_drv_pwm_simple_playback(&m_pwm0, &m_demo1_seq, 1, NRF_DRV_PWM_FLAG_LOOP);
+}
+
+void pwm_duty(int percent)
+{
+    m_demo1_seq_values.channel_0 = percent;
 }
 
 void pwm_task(void)
@@ -61,9 +65,9 @@ void pwm_task(void)
 
     for (;;)
     {
-       vTaskDelay(1000); 
-       m_demo1_seq_values.channel_0 -= 1000;
-       if(m_demo1_seq_values.channel_0 == 0)
-        m_demo1_seq_values.channel_0 = 10000;
+       //pwm_duty(90);
+       vTaskDelay(5000); 
+       //pwm_duty(0);
+       vTaskDelay(5000);
     }
 }

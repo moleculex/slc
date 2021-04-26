@@ -1,9 +1,11 @@
 #ifndef __PROTOCOL_H
 #define __PROTOCOL_H
 
-#define FLASH_WRITE 0
-#define RAM_WRITE 	2
-#define STATUS 		6
+#include <stdint.h>
+
+#define PROTOCOL_FLASH_WRITE 0
+#define PROTOCOL_RAM_WRITE 	2
+#define PROTOCOL_STATUS 		6
 
 typedef struct{
 	union
@@ -41,6 +43,44 @@ typedef struct{
 	};
 }t_status;
 static t_status _status;
+
+typedef struct {
+	char photocell;
+	int pwm;
+}t_light;
+
+typedef struct {
+	char latitude[10];
+	char longitude[11];
+	uint8_t buf[128];
+	char status;
+	char fix;
+	char sent;
+	char led;
+}t_sys;
+
+typedef struct{
+	union{
+		uint32_t buffer[2];
+		struct {
+			char profile;
+			char group;
+			char lux_100;
+			char reserved;
+		}__attribute__((packed));
+
+		struct {
+			char profile;
+			char group;
+			char lux_100;
+			char reserved;
+		}__attribute__((packed)) config;
+	};
+}t_flash;
+
+static t_flash _flash;
+static t_light _light;
+static t_sys _sys;
 
 void protocol_decode(t_protocol *buf);
 void protocol_encode(char *buf);

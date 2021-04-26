@@ -18,24 +18,6 @@ typedef struct{
 
 static t_rn2483 _rn2483;
 
-typedef struct {
-	char photocell;
-	int pwm;
-}t_light;
-
-typedef struct {
-	char latitude[10];
-	char longitude[11];
-	uint8_t buf[128];
-	char status;
-	char fix;
-	char sent;
-	char led;
-}t_sys;
-
-static t_light _light;
-static t_sys _sys;
-
 void rn2483_init(void);
 void rn2483_task(void);
 void rn2483_rx(void);

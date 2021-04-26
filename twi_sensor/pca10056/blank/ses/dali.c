@@ -16,7 +16,7 @@ void dali_init(void)
 
 void dali_tx(uint8_t cmd1, uint8_t cmd2) // transmit commands to DALI bus (address byte, command byte)
 {
-	dali_sendBit(0);//1
+	dali_sendBit(1);
 	dali_sendByte(cmd1);
 	dali_sendByte(cmd2);
 	nrf_gpio_pin_write(DALI_TX, 0);

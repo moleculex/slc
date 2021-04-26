@@ -56,6 +56,9 @@ extern "C" {
 #define LED_BLUE       NRF_GPIO_PIN_MAP(1,0)
 #define LED_NETWORK    NRF_GPIO_PIN_MAP(1,14)
 #define LED_POWER      NRF_GPIO_PIN_MAP(1,11)
+#define DALI_TX        NRF_GPIO_PIN_MAP(1,2)
+#define SARA_PWR       NRF_GPIO_PIN_MAP(0,3)
+#define SARA_RST       NRF_GPIO_PIN_MAP(0,28)
 
 // LEDs definitions for PCA10056
 #define LEDS_NUMBER    4

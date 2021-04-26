@@ -97,6 +97,8 @@
       <file file_name="protocol.h" />
       <file file_name="dali.h" />
       <file file_name="dali.c" />
+      <file file_name="sara.h" />
+      <file file_name="sara.c" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />
