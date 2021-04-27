@@ -63,16 +63,16 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="72" y="297" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="282" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="297" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="282" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="142" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_twi.h" selected="0" top="132" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="49" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/boards.h" selected="0" top="39" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="dali.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="dali.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="20" y="49" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10056.h" selected="0" top="27" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="64" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10056.h" selected="1" top="27" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="rn2483.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="5" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/rn2483.c" useBinaryEdit="0" left="0" path="protocol.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="3" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="sara.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="45" y="63" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="rn2483.c" selected="0" top="50" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="sara.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="63" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="rn2483.c" selected="0" top="50" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="30" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="sara.c" selected="0" top="82" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="106" useTextEdit="1" openedFrom="/home/peter/nRF5_SDK_17.0.2_d674dde/examples/peripheral/twi_sensor/pca10056/blank/ses/sara.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/hal/nrf_uart.h" selected="0" top="82" codecName="Default"/>
  </Files>

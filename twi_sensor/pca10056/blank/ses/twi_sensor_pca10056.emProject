@@ -99,6 +99,8 @@
       <file file_name="dali.c" />
       <file file_name="sara.h" />
       <file file_name="sara.c" />
+      <file file_name="stpm32.h" />
+      <file file_name="stpm32.c" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />

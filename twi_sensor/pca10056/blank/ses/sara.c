@@ -44,8 +44,8 @@ void sara_init(void)
 
   const app_uart_comm_params_t comm_params =
   {
+      17,
       29,
-      45,
       0,
       0,
       0,
