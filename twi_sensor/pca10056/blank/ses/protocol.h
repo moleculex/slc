@@ -59,26 +59,6 @@ typedef struct {
 	char led;
 }t_sys;
 
-typedef struct{
-	union{
-		uint32_t buffer[2];
-		struct {
-			char profile;
-			char group;
-			char lux_100;
-			char reserved;
-		}__attribute__((packed));
-
-		struct {
-			char profile;
-			char group;
-			char lux_100;
-			char reserved;
-		}__attribute__((packed)) config;
-	};
-}t_flash;
-
-static t_flash _flash;
 static t_light _light;
 static t_sys _sys;
 

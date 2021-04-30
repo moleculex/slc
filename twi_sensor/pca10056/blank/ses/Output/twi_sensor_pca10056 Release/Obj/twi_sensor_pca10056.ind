@@ -48,6 +48,8 @@
 "Output/twi_sensor_pca10056 Release/Obj/dali.o"
 "Output/twi_sensor_pca10056 Release/Obj/sara.o"
 "Output/twi_sensor_pca10056 Release/Obj/stpm32.o"
+"Output/twi_sensor_pca10056 Release/Obj/gps.o"
+"Output/twi_sensor_pca10056 Release/Obj/flash.o"
 "Output/twi_sensor_pca10056 Release/Obj/SEGGER_RTT.o"
 "Output/twi_sensor_pca10056 Release/Obj/SEGGER_RTT_Syscalls_SES.o"
 "Output/twi_sensor_pca10056 Release/Obj/SEGGER_RTT_printf.o"

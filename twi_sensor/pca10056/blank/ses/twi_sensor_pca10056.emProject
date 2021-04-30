@@ -101,6 +101,10 @@
       <file file_name="sara.c" />
       <file file_name="stpm32.h" />
       <file file_name="stpm32.c" />
+      <file file_name="gps.h" />
+      <file file_name="gps.c" />
+      <file file_name="flash.c" />
+      <file file_name="flash.h" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />
