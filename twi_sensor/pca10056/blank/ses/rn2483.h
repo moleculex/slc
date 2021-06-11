@@ -16,7 +16,7 @@ typedef struct{
 	long int session_timer;
 }t_rn2483;
 
-static t_rn2483 _rn2483;
+extern t_rn2483 _rn2483;
 
 void rn2483_init(void);
 void rn2483_task(void);

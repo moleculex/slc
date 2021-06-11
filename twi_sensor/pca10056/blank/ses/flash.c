@@ -40,7 +40,7 @@ void flash_read(void)
     fds_flash_record_t config = {0};
     fds_find_token_t  tok  = {0};
 
-   _flash.profile = 0x00;
+    _flash.profile = 0x00;
     _flash.group = 0x00;
     _flash.profile_set = 0;
 

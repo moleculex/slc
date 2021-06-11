@@ -10,7 +10,9 @@
 
 static volatile bool m_xfer_done = false;
 static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(0);
-static uint8_t m_sample[256];                        
+   
+
+t_sys _sys;                    
 
 void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 {
@@ -46,6 +48,78 @@ void gps_init(void)
     nrf_drv_twi_init(&m_twi, &twi_config, twi_handler, NULL);
     nrf_drv_twi_enable(&m_twi);
 
+    uint8_t reg[2] = {0x06, 0x00};
+
+    /*nrf_drv_twi_tx(&m_twi, 0x1f, reg, 1, true);
+    while (m_xfer_done == false);  
+    nrf_drv_twi_rx(&m_twi, 0x1f, (uint8_t *)m_sample, 6);
+
+    reg[0] = 0x1A;
+    reg[1] = 0x80;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);  
+
+    reg[0] = 0x1C;
+    reg[1] = 0x30;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+    
+    reg[0] = 0x1F;
+    reg[1] = 0x04;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x26;
+    reg[1] = 0xFF;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x27;
+    reg[1] = 0xDA;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x28;
+    reg[1] = 0xF1;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x2A;
+    reg[1] = 0x01;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x2B;
+    reg[1] = 0x0A;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x18;
+    reg[1] = 0x85;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
+
+    reg[0] = 0x13;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 1, true);
+    while (m_xfer_done == false);  
+    nrf_drv_twi_rx(&m_twi, 0x1f, (uint8_t *)m_sample, 6);
+
+    reg[0] = 0x06;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 1, true);
+    while (m_xfer_done == false);  
+    nrf_drv_twi_rx(&m_twi, 0x1f, (uint8_t *)m_sample, 6);*/
+
     nrf_gpio_cfg_output(GPS_RESET);
 
     nrf_gpio_pin_write(GPS_RESET, 1);
@@ -53,19 +127,37 @@ void gps_init(void)
     nrf_gpio_pin_write(GPS_RESET, 0);
     vTaskDelay(1000);
     nrf_gpio_pin_write(GPS_RESET, 1);
+
+        reg[0] = 0x18;
+    reg[1] = 0xC0;
+
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 2, false);
+    while (m_xfer_done == false);
 }
+
+static uint8_t m_sample[64]; 
 
 void gps_task(void)
 {
     char *n;
     char latitude[12];
-    char longitude[13];
+    char longitude[13];uint8_t reg[2] = {0x06, 0x00};
 
     gps_init();
 
     for(;;)
     {
-        gps_rx();
+    reg[0] = 0x06;
+    m_sample[0] = 0;
+    nrf_drv_twi_tx(&m_twi, 0x1f, reg, 1, true); 
+     while (m_xfer_done == false);
+    nrf_drv_twi_rx(&m_twi, 0x1f, (uint8_t *)m_sample, 6);
+    while (m_xfer_done == false);
+    
+
+    
+    vTaskDelay(1000);
+       gps_rx();
 
         if(_sys.buf[0] != 0xff && _sys.buf[0] != '\0' )
         {

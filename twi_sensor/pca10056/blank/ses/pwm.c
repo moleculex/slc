@@ -65,7 +65,7 @@ void pwm_task(void)
 
     for (;;)
     {
-       //pwm_duty(90);
+       pwm_duty(90);
        vTaskDelay(5000); 
        //pwm_duty(0);
        vTaskDelay(5000);

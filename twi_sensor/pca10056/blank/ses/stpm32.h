@@ -11,10 +11,10 @@ typedef struct{
 	char state;
 }t_stpm32;
 
-static t_stpm32 _stpm32;
+extern t_stpm32 _stpm32;
 
 void stpm32_init(void);
-void stpm32_manager(void);
+void stpm32_task(void);
 //void stpm32_sendBreak(void);
 void stpm32_write(char *buffer, char length);
 void stpm32_read(uint8_t *buffer, int length);

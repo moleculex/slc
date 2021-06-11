@@ -10,6 +10,8 @@
 #include "app_error.h"
 #include "protocol.h"
 
+t_stpm32 _stpm32;
+
 void stpm32_frame(uint8_t *pBuf);
 uint8_t CalcCRC8(uint8_t *pBuf);
 void Crc8Calc (uint8_t u8Data);
@@ -34,25 +36,38 @@ void stpm32_init(void)
   memset(_stpm32.rxBuffer, '\0', sizeof _stpm32.rxBuffer);
   _stpm32.rxBuffer_ptr = &_stpm32.rxBuffer[0];
 
+  nrf_gpio_cfg(STPM32_TX,
+               NRF_GPIO_PIN_DIR_OUTPUT,
+               NRF_GPIO_PIN_INPUT_DISCONNECT,
+               NRF_GPIO_PIN_NOPULL,
+               NRF_GPIO_PIN_S0D1,
+               NRF_GPIO_PIN_NOSENSE);
+
+  nrf_gpio_pin_write(STPM32_TX, 1);
+  vTaskDelay(200);
+  nrf_gpio_pin_write(STPM32_TX, 0);
+  vTaskDelay(200);
+  nrf_gpio_pin_write(STPM32_TX, 1);
+  vTaskDelay(200);
+
   const app_uart_comm_params_t comm_params =
   {
-      29,
-      45,
+      STPM32_RX,
+      STPM32_TX,
       0,
       0,
       0,
       false,
-      NRF_UART_BAUDRATE_115200
+      NRF_UART_BAUDRATE_9600
   };
 
   APP_UART_FIFO_INIT(&comm_params,
-                     256,
-                     256,
+                     64,
+                     64,
                      stpm32_uart_error_handle,
                      APP_IRQ_PRIORITY_LOWEST,
                      err_code);
 
-  APP_ERROR_CHECK(err_code);
 
 #ifdef V1
 	//RST
@@ -101,7 +116,7 @@ t_pha _pha;
 
 int v;
 
-void stpm32_manager(void)
+void stpm32_task(void)
 {
 	_stpm32.state = 0;
 
@@ -162,6 +177,8 @@ void stpm32_manager(void)
 
 				break;
 		}
+
+                vTaskDelay(1000);
 	}
 }
 
@@ -184,7 +201,7 @@ void stpm32_enableLatch(void)
 	stpm32_frame((uint8_t *)_stpm32.txBuffer);
 	stpm32_write(_stpm32.txBuffer, 5);
 
-        stpm32_read(_stpm32.rxBuffer, 50);
+        stpm32_read(_stpm32.rxBuffer,8);
 }
 
 void stpm32_readVI(void)
@@ -206,7 +223,7 @@ void stpm32_readVI(void)
 	stpm32_frame((uint8_t *)_stpm32.txBuffer);
 	stpm32_write(_stpm32.txBuffer, 5);
 
-        stpm32_read(_stpm32.rxBuffer, 50);
+        stpm32_read(_stpm32.rxBuffer, 8);
 }
 
 void stpm32_readPHA(void)
@@ -228,7 +245,7 @@ void stpm32_readPHA(void)
 	stpm32_frame((uint8_t *)_stpm32.txBuffer);
 	stpm32_write(_stpm32.txBuffer, 5);
 
-        stpm32_read(_stpm32.rxBuffer, 50);
+        stpm32_read(_stpm32.rxBuffer, 8);
 }
 
 void stpm32_frame(uint8_t *pBuf)

@@ -6,6 +6,7 @@
 #include "rn2483.h"
 #include "sara.h"
 #include "gps.h"
+#include "stpm32.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "photo.h"
@@ -13,6 +14,20 @@
 #include "dali.h"
 #include "protocol.h"
 #include "flash.h"
+#include "nrf_drv_wdt.h"
+
+/*
+nrfutil settings generate --family NRF52840 --application blinky_FreeRTOS_pca10056.hex --application-version-string "1.2.3" --bootloader-version 0 --bl-settings-version 2 bl_setting.hex
+
+nrfjprog --family nRF52 --eraseall
+nrfjprog --reset --program bl_setting.hex --family NRF52 --sectoranduicrerase
+nrfjprog --reset --program s140_nrf52_7.2.0_softdevice.hex --family NRF52 --sectoranduicrerase
+nrfjprog --reset --program secure_bootloader_ble_s140_pca10056.hex --family NRF52 --sectoranduicrerase
+
+nrfutil pkg generate --application blinky_FreeRTOS_pca10056.hex --application-version-string "1.2.3" --hw-version 52 --sd-req 0x100 --key-file ~/nRF5_SDK_17.0.2_d674dde/examples/dfu/dfu_private_key.pem app_vb.zip
+*/
+
+nrf_drv_wdt_channel_id m_channel_id;
 
 void buzzer_task(void)
 {
@@ -31,14 +46,6 @@ void buzzer_task(void)
   }
 }
 
-#define BROADCAST_C 0b11111110
-#define ON_C 0b00000101
-#define _25 64
-#define _50 127
-#define _75 192
-#define _100 254
-#define OFF_C 0b00000000
-
 void led_task(void)
 {
   nrf_gpio_cfg_output(LED_RED);
@@ -47,31 +54,34 @@ void led_task(void)
   nrf_gpio_cfg_output(LED_POWER);
   nrf_gpio_cfg_output(LED_NETWORK);
 
-  nrf_gpio_pin_write(LED_RED, 0);
-  nrf_gpio_pin_write(LED_GREEN, 0);
-  nrf_gpio_pin_write(LED_BLUE, 0);
-  nrf_gpio_pin_write(LED_POWER, 0);
+  nrf_gpio_pin_write(LED_RED, 1);
+  nrf_gpio_pin_write(LED_GREEN, 1);
+  nrf_gpio_pin_write(LED_BLUE, 1);
+  nrf_gpio_pin_write(LED_POWER, 1);
   nrf_gpio_pin_write(LED_NETWORK, 0);
-
-  dali_init();
 
   for(;;)
   {
-    dali_tx(BROADCAST_C, _100);
-    vTaskDelay(2000);
-    nrf_gpio_pin_write(LED_RED, 0);
+    /*nrf_gpio_pin_write(LED_RED, 0);
     nrf_gpio_pin_write(LED_GREEN, 0);
     nrf_gpio_pin_write(LED_BLUE, 0);
     nrf_gpio_pin_write(LED_POWER, 0);
-    nrf_gpio_pin_write(LED_NETWORK, 0);
-    dali_tx(BROADCAST_C, _75);
-    vTaskDelay(2000);
-    dali_tx(BROADCAST_C, _50);
-    vTaskDelay(2000);
-    dali_tx(BROADCAST_C, _25);
-    vTaskDelay(2000);
-    dali_tx(BROADCAST_C, 0);
-    vTaskDelay(2000);
+    nrf_gpio_pin_write(LED_NETWORK, 0);*/
+
+    if(_sys.led == 1)
+      nrf_gpio_pin_write(LED_POWER, 0);
+    else
+      nrf_gpio_pin_write(LED_POWER, 1);
+
+    if(lux < 50)
+      nrf_gpio_pin_write(LED_BLUE, 0);
+    else  
+      nrf_gpio_pin_write(LED_BLUE, 1);
+
+    nrf_gpio_pin_write(LED_RED, 0);
+    vTaskDelay(200);
+    nrf_gpio_pin_write(LED_RED, 1);
+    vTaskDelay(200);
     
     /*nrf_gpio_pin_write(LED_RED, 1);
     nrf_gpio_pin_write(LED_GREEN, 1);
@@ -80,6 +90,8 @@ void led_task(void)
     nrf_gpio_pin_write(LED_NETWORK, 1);
     dali_tx(BROADCAST_C, OFF_C);
     vTaskDelay(1000);*/
+
+    nrf_drv_wdt_channel_feed(m_channel_id);
   }
 }
 
@@ -90,11 +102,17 @@ TaskHandle_t  pwm_task_handle;
 TaskHandle_t  led_task_handle;
 TaskHandle_t  sara_task_handle;
 TaskHandle_t  gps_task_handle;
+TaskHandle_t  dali_task_handle;
+TaskHandle_t  stpm32_task_handle;
 
 int main(void)
 {
+    nrf_drv_wdt_config_t config = NRF_DRV_WDT_DEAFULT_CONFIG;
+    nrf_drv_wdt_init(&config, NULL);
+    nrf_drv_wdt_channel_alloc(&m_channel_id);
+    nrf_drv_wdt_enable();
     flash_init();
-    vTaskDelay(100);
+    //vTaskDelay(100);
 
     //bsp_board_init(BSP_INIT_LEDS); 
 
@@ -135,13 +153,15 @@ int main(void)
 
     //kx122_write(0x18, 0x85);
 
-    xTaskCreate(buzzer_task, "buzzer_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &buzzer_task_handle);
+    xTaskCreate(buzzer_task, "buzzer_task", configMINIMAL_STACK_SIZE, NULL, 2, &buzzer_task_handle);
     xTaskCreate(photo_task, "photo_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &photo_task_handle);
-    //xTaskCreate(rn2483_task, "rn2483_task", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &rn2483_task_handle);
+    xTaskCreate(rn2483_task, "rn2483_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &rn2483_task_handle);
     xTaskCreate(pwm_task, "pwm_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &pwm_task_handle);
-    xTaskCreate(led_task, "led_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &led_task_handle);
+    xTaskCreate(dali_task, "dali_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &dali_task_handle);
+    xTaskCreate(led_task, "led_task", configMINIMAL_STACK_SIZE, NULL, 2, &led_task_handle);
     //xTaskCreate(sara_task, "sara_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &sara_task_handle);
-    xTaskCreate(gps_task, "gps_task", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &gps_task_handle);
+    xTaskCreate(gps_task, "gps_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &gps_task_handle);
+    //xTaskCreate(stpm32_task, "stpm32_task", configMINIMAL_STACK_SIZE + 200, NULL, 2, &stpm32_task_handle);
     vTaskStartScheduler();
 
     while (true) {}

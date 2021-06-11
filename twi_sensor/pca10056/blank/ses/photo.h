@@ -3,4 +3,6 @@
 
 void photo_task(void);
 
+extern int lux;
+
 #endif

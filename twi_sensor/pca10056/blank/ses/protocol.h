@@ -27,7 +27,7 @@ static t_protocol _protocol;
 
 typedef struct{
 	union{
-		char buffer[14];
+		char buffer[12];
 		struct {
 			char start;
 			char profile;
@@ -37,12 +37,12 @@ typedef struct{
 			char voltage[2];
 			char current[2];
 			char phase_angle[2];
-			char bat[2];
+			//char bat[2];
 			char end;
 		}__attribute__((packed));
 	};
 }t_status;
-static t_status _status;
+extern t_status _status;
 
 typedef struct {
 	char photocell;
@@ -59,8 +59,8 @@ typedef struct {
 	char led;
 }t_sys;
 
-static t_light _light;
-static t_sys _sys;
+extern t_light _light;
+extern t_sys _sys;
 
 void protocol_decode(t_protocol *buf);
 void protocol_encode(char *buf);

@@ -8,6 +8,9 @@
 #include "task.h"
 #include "app_error.h"
 #include "protocol.h"
+#include "flash.h"
+
+t_rn2483 _rn2483;
 
 #define SYS_RESET "sys reset\r\n"
 #define SYS_GET_HWEUI "sys get hweui\r\n"
@@ -39,6 +42,8 @@ unsigned int timeslot;
 char strTimeslot[5];
 char txBuf[21];
 int f;
+
+t_status _status;
 
 void rn2483_uart_error_handle(app_uart_evt_t * p_event)
 {
@@ -78,13 +83,12 @@ void rn2483_init(void)
   };
 
   APP_UART_FIFO_INIT(&comm_params,
-                     256,
-                     256,
+                     128,
+                     128,
                      rn2483_uart_error_handle,
                      APP_IRQ_PRIORITY_LOWEST,
                      err_code);
 
-  APP_ERROR_CHECK(err_code);
 }
 
 void rn2483_task(void)
@@ -113,10 +117,14 @@ void rn2483_task(void)
 	ascii[0] = 'C';
 	ascii[1] = '0';
 	memcpy(&ascii[2], &_rn2483.deveui[8], 8);
-	_status.start = 0x80;
+	_status.start = 0x7f;
+        flash_read();
+        vTaskDelay(100);
+        _status.profile = _flash.profile;
+        _status.group = _flash.group;
 	_status.end = 0xfe;
-	hex_to_hexStr(_status.buffer, &ascii[10], 14);
-	rn2483_tx(ascii, 38);
+	hex_to_hexStr(_status.buffer, &ascii[10], 12);
+	rn2483_tx(ascii, 34);
 	vTaskDelay(2000);
 
 	nrf_gpio_pin_write(BUZZER, 1);
@@ -158,10 +166,14 @@ void rn2483_task(void)
 				ascii[0] = 'C';
 				ascii[1] = '0';
 				memcpy(&ascii[2], &_rn2483.deveui[8], 8);
-				_status.start = 0x80;
+				_status.start = 0x7f;
+                                flash_read();
+                                vTaskDelay(100);
+                                _status.profile = _flash.profile;
+                                _status.group = _flash.group;
 				_status.end = 0xfe;
-				hex_to_hexStr(_status.buffer, &ascii[10], 14);
-				rn2483_tx(ascii, 38);
+				hex_to_hexStr(_status.buffer, &ascii[10], 12);
+				rn2483_tx(ascii, 34);
 				vTaskDelay(2000);
 
 				nrf_gpio_pin_write(BUZZER, 1);
@@ -181,6 +193,10 @@ void rn2483_task(void)
 					ascii[1] = '0';
 					memcpy(&ascii[2], &_rn2483.deveui[8], 8);
 					_status.start = 0x7f;
+                                        flash_read();
+                                        vTaskDelay(100);
+                                        _status.profile = _flash.profile;
+                                        _status.group = _flash.group;
 					_status.end = 0xfe;
 					hex_to_hexStr(_status.buffer, &ascii[10], 12);
 					rn2483_tx(ascii, 34);
